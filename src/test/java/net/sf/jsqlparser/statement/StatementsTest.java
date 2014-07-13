@@ -40,13 +40,13 @@ public class StatementsTest {
      */
     @Test
     public void testStatements() throws JSQLParserException {
-        String sqls = "select * from mytable; select * from mytable2;";
+        String sqls = "select t1.$1, t1.$2 from mytable t1 join another_table t2 on t1.$1=t2.$3;";
         Statements parseStatements = CCJSqlParserUtil.parseStatements(sqls);
+        System.out.println(parseStatements.toString());
+        Statement stmt = parseStatements.getStatements().get(0);
+        System.out.println(stmt.toString());
         
-        assertEquals("SELECT * FROM mytable;\nSELECT * FROM mytable2;\n", parseStatements.toString());
         
-        assertTrue(parseStatements.getStatements().get(0) instanceof Select);
-        assertTrue(parseStatements.getStatements().get(1) instanceof Select);
     }
     
 }
