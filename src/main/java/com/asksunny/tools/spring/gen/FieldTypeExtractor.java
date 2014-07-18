@@ -15,13 +15,16 @@ public class FieldTypeExtractor
 	 * Group 3: Size of field: 12
 	 * GROUP 5: Decimal length: 4
 	 */
-	final static Pattern TYPE_Pattern = Pattern.compile("(\\w+)(\\s*\\(\\s*(\\d+)\\s*(,\\s*(\\d+)\\s*)?\\))?",  Pattern.CASE_INSENSITIVE);
-	final static Pattern NULLABLE_Pattern = Pattern.compile("\\s+not\\s+null(\\s+)?",  Pattern.CASE_INSENSITIVE);
-	final static Pattern PK_Pattern = Pattern.compile("\\s+primary\\s+key(\\s+)?",  Pattern.CASE_INSENSITIVE);
-	final static Pattern CNSTRNT_PK_Pattern = Pattern.compile("\\s*primary\\s+key\\s*\\(\\s*((\\w+)\\s*(,\\s*(\\w+)\\s*)*)\\)",  Pattern.CASE_INSENSITIVE);
-	final static Pattern FK_Pattern = Pattern.compile("FOREIGN\\s+KEY\\s+REFERENCES\\s+(\\w+)\\(\\s*(\\w+)\\s*\\)",  Pattern.CASE_INSENSITIVE);
-	final static Pattern CNSTRNT_FK_Pattern = Pattern.compile("FOREIGN\\s+KEY\\s*\\((\\s*\\w+\\s*(,\\s*\\w+\\s*)*)\\)\\s*REFERENCES\\s+(\\w+)\\((\\s*\\w+\\s*(,\\s*\\w+\\s*)*)\\)",  Pattern.CASE_INSENSITIVE);
+	public final static Pattern TYPE_Pattern = Pattern.compile("(\\w+)(\\s*\\(\\s*(\\d+)\\s*(,\\s*(\\d+)\\s*)?\\))?",  Pattern.CASE_INSENSITIVE);
+	public final static Pattern NULLABLE_Pattern = Pattern.compile("\\s+not\\s+null(\\s+)?",  Pattern.CASE_INSENSITIVE);
+	public final static Pattern PK_Pattern = Pattern.compile("\\s+primary\\s+key(\\s+)?",  Pattern.CASE_INSENSITIVE);
+	public final static Pattern CNSTRNT_PK_Pattern = Pattern.compile("\\s*primary\\s+key\\s*\\(\\s*((\\w+)\\s*(,\\s*(\\w+)\\s*)*)\\)",  Pattern.CASE_INSENSITIVE);
+	public final static Pattern FK_Pattern = Pattern.compile("FOREIGN\\s+KEY\\s+REFERENCES\\s+(\\w+)\\(\\s*(\\w+)\\s*\\)",  Pattern.CASE_INSENSITIVE);
+	public final static Pattern CNSTRNT_FK_Pattern = Pattern.compile("FOREIGN\\s+KEY\\s*\\((\\s*\\w+\\s*(,\\s*\\w+\\s*)*)\\)\\s*REFERENCES\\s+(\\w+)\\((\\s*\\w+\\s*(,\\s*\\w+\\s*)*)\\)",  Pattern.CASE_INSENSITIVE);
 		
+	
+	
+	
 	public static void extractType(FieldDef def, String typedef)
 	{
 		Matcher m = TYPE_Pattern.matcher(typedef);
@@ -32,7 +35,10 @@ public class FieldTypeExtractor
 			String l = m.group(3);
 			if(l!=null){
 				def.setLength(Integer.valueOf(l));
-			}			
+			}	
+			if(m.group(5)!=null  && Integer.valueOf(m.group(5))>0){
+				def.setDecimal(true);
+			}
 		}
 	}
 	

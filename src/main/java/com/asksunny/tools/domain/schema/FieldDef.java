@@ -1,14 +1,39 @@
 package com.asksunny.tools.domain.schema;
 
 public class FieldDef {
+	public static final int UNDEF_TYPE = -99999;
+	
 	String name;
 	String typename;
 	boolean nullable;
 	int length;
+	boolean decimal;
 	boolean primaryKey;
 	boolean foreignKey;
+	int jdbcType = UNDEF_TYPE;	
 	String foreignTable;
 	String foreignColumnName;
+	
+	
+	
+
+	public int getJdbcType() {
+		return jdbcType;
+	}
+
+	public FieldDef setJdbcType(int jdbcType) {
+		this.jdbcType = jdbcType;
+		return this;
+	}
+
+	public boolean isDecimal() {
+		return decimal;
+	}
+
+	public FieldDef setDecimal(boolean decimal) {
+		this.decimal = decimal;
+		return this;
+	}
 
 	public boolean isForeignKey() {
 		return foreignKey;
@@ -82,5 +107,7 @@ public class FieldDef {
 		this.primaryKey = primaryKey;
 		return this;
 	}
+	
+	
 
 }
