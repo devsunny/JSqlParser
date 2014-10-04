@@ -75,7 +75,7 @@ import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.truncate.*;
 import net.sf.jsqlparser.statement.update.*;
 import net.sf.jsqlparser.statement.set.Set;
-
+import net.sf.jsqlparser.statement.show.Show;
 import java.util.*;
 
 /**
@@ -198,6 +198,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_CURRENT: "CURRENT">
 |   <K_ROW: "ROW"> 
 |   <K_TO: "TO"> 
+|   <K_SHOW: "SHOW"> 
 }
 
 TOKEN : /* Numeric Constants */
@@ -275,6 +276,8 @@ Statement SingleStatement() :
     stm = Truncate()
     |
     stm = Set()
+    |
+    stm = Show()
     )
     { return stm; }
 }
@@ -2290,6 +2293,20 @@ Set Set():
 		return set;
 	}
 }
+
+
+Show Show():
+{
+	Show show = new Show();	
+}
+{
+	<K_SHOW> token=<S_IDENTIFIER> { show.setName(token.image); }
+	{
+		return show;
+	}
+}
+
+
 
 
 Alter Alter():

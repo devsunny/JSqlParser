@@ -37,6 +37,7 @@ import net.sf.jsqlparser.statement.replace.Replace;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.WithItem;
 import net.sf.jsqlparser.statement.set.Set;
+import net.sf.jsqlparser.statement.show.Show;
 import net.sf.jsqlparser.statement.truncate.Truncate;
 import net.sf.jsqlparser.statement.update.Update;
 
@@ -142,6 +143,11 @@ public class StatementDeParser implements StatementVisitor {
 
 	@Override
 	public void visit(Set stmts) {		
+		
+	}
+	
+	@Override
+	public void visit(Show stmts) {		
 		
 	}
 
