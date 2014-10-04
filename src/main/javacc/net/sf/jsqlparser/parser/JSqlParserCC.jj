@@ -18,6 +18,8 @@
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
  * #L%
+ *
+ *  javacc  -GRAMMAR_ENCODING=UTF-8 JSqlParserCC.jj
  */
 
 options{
@@ -72,6 +74,7 @@ import net.sf.jsqlparser.statement.replace.*;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.truncate.*;
 import net.sf.jsqlparser.statement.update.*;
+import net.sf.jsqlparser.statement.set.Set;
 
 import java.util.*;
 
@@ -194,6 +197,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_FOLLOWING: "FOLLOWING">
 |   <K_CURRENT: "CURRENT">
 |   <K_ROW: "ROW"> 
+|   <K_TO: "TO"> 
 }
 
 TOKEN : /* Numeric Constants */
@@ -269,6 +273,8 @@ Statement SingleStatement() :
     stm = Drop()
     |
     stm = Truncate()
+    |
+    stm = Set()
     )
     { return stm; }
 }
@@ -2267,6 +2273,24 @@ Truncate Truncate():
 		return truncate;
 	}
 }
+
+
+Set Set():
+{
+	Set set = new Set();
+	String settingName;
+}
+{
+	<K_SET> settingName=RelObjectName() {set.setName(settingName);}  (<K_TO>)?
+	(token=<S_CHAR_LITERAL> {set.setValue(token.image);} 
+	| token=<S_DOUBLE>  {set.setValue(token.image);}
+	| token=<S_LONG> {set.setValue(token.image);}
+	)	
+	{
+		return set;
+	}
+}
+
 
 Alter Alter():
 {

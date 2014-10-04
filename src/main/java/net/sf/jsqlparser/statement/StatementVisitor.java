@@ -30,6 +30,7 @@ import net.sf.jsqlparser.statement.drop.Drop;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.replace.Replace;
 import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.set.Set;
 import net.sf.jsqlparser.statement.truncate.Truncate;
 import net.sf.jsqlparser.statement.update.Update;
 
@@ -58,4 +59,6 @@ public interface StatementVisitor {
 	void visit(Alter alter);
     
     void visit(Statements stmts);
+    
+    void visit(Set stmts);
 }

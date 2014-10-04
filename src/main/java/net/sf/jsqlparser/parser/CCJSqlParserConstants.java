@@ -233,27 +233,29 @@ public interface CCJSqlParserConstants {
   /** RegularExpression Id. */
   int K_ROW = 104;
   /** RegularExpression Id. */
-  int S_DOUBLE = 105;
+  int K_TO = 105;
   /** RegularExpression Id. */
-  int S_LONG = 106;
+  int S_DOUBLE = 106;
   /** RegularExpression Id. */
-  int DIGIT = 107;
+  int S_LONG = 107;
   /** RegularExpression Id. */
-  int LINE_COMMENT = 108;
+  int DIGIT = 108;
   /** RegularExpression Id. */
-  int MULTI_LINE_COMMENT = 109;
+  int LINE_COMMENT = 109;
   /** RegularExpression Id. */
-  int S_IDENTIFIER = 110;
+  int MULTI_LINE_COMMENT = 110;
   /** RegularExpression Id. */
-  int LETTER = 111;
+  int S_IDENTIFIER = 111;
   /** RegularExpression Id. */
-  int SPECIAL_CHARS = 112;
+  int LETTER = 112;
   /** RegularExpression Id. */
-  int S_CHAR_LITERAL = 113;
+  int SPECIAL_CHARS = 113;
   /** RegularExpression Id. */
-  int S_QUOTED_IDENTIFIER = 114;
+  int S_CHAR_LITERAL = 114;
   /** RegularExpression Id. */
-  int ADDITIONAL_LETTERS = 115;
+  int S_QUOTED_IDENTIFIER = 115;
+  /** RegularExpression Id. */
+  int ADDITIONAL_LETTERS = 116;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -365,6 +367,7 @@ public interface CCJSqlParserConstants {
     "\"FOLLOWING\"",
     "\"CURRENT\"",
     "\"ROW\"",
+    "\"TO\"",
     "<S_DOUBLE>",
     "<S_LONG>",
     "<DIGIT>",
