@@ -18,7 +18,7 @@
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
  * #L%
- *
+ *  /cygdrive/c/Users/Sunny Liu/git/JSqlParser/src/main/javacc/net/sf/jsqlparser/parser/
  *  javacc  -GRAMMAR_ENCODING=UTF-8 JSqlParserCC.jj
  */
 
@@ -2284,7 +2284,7 @@ Set Set():
 	String settingName;
 }
 {
-	<K_SET> settingName=RelObjectName() {set.setName(settingName);}  (<K_TO>)?
+	<K_SET> settingName=RelObjectName() {set.setName(settingName);}  (<K_TO> | "=")?
 	(token=<S_CHAR_LITERAL> {set.setValue(token.image);} 
 	| token=<S_DOUBLE>  {set.setValue(token.image);}
 	| token=<S_LONG> {set.setValue(token.image);}
