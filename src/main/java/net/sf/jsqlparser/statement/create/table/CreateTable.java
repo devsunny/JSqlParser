@@ -37,6 +37,43 @@ public class CreateTable implements Statement {
 	private List<String> tableOptionsStrings;
 	private List<ColumnDefinition> columnDefinitions;
 	private List<Index> indexes;
+	private String location;
+	private List<PartitionedBy> partitionedBys;
+	private FileFormat fileFormat;
+	private RowFormat rowFormat;
+	
+
+	public FileFormat getFileFormat() {
+		return fileFormat;
+	}
+
+	public void setFileFormat(FileFormat fileFormat) {
+		this.fileFormat = fileFormat;
+	}
+
+	public RowFormat getRowFormat() {
+		return rowFormat;
+	}
+
+	public void setRowFormat(RowFormat rowFormat) {
+		this.rowFormat = rowFormat;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public List<PartitionedBy> getPartitionedBys() {
+		return partitionedBys;
+	}
+
+	public void setPartitionedBys(List<PartitionedBy> partitionedBys) {
+		this.partitionedBys = partitionedBys;
+	}
 
 	@Override
 	public void accept(StatementVisitor statementVisitor) {
