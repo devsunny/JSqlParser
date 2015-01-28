@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asksunny.demo.persistence.UsersMapper">
+
+    <select id="getAllUsers" resultType="Users">
+    SELECT userid AS userid, firstname AS firstname, lastname AS lastname, password AS password FROM users
+    </select>
+
+    <insert id="insertUsers" parameterType="Users">
+    INSERT INTO users (userid, firstname, lastname, password)  VALUES ( ${userid}, ${firstname}, ${lastname}, ${password}) 
+    </insert>
+
+    <select id="getUsersBykey" parameterType="Users" resultType="Users">
+    SELECT userid AS userid, firstname AS firstname, lastname AS lastname, password AS password FROM users WHERE userid=${userid}
+    </select>
+
+    <update id="updateUsersByKey" parameterType="Users">
+    UPATE users SET userid=${userid}, firstname=${firstname}, lastname=${lastname}, password=${password}   WHERE userid=${userid}
+    </update>
+
+    <delete id="deleteUsersByKey" parameterType="Users">
+    DELETE FROM  users WHERE userid=${userid}
+    </delete>
+
+<mapper>

@@ -82,6 +82,12 @@ public class TestMain {
 		System.out.println(((CreateTable)stmt).getRowFormat());
 		System.out.println(((CreateTable)stmt).getFileFormat());
 		System.out.println(((CreateTable)stmt).getLocation());
+		
+		
+		Long t = new Long(124);
+		Integer i = ((int)t.longValue());
+		
+		
 	}
 
 }
