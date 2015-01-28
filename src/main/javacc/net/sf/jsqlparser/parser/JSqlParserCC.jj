@@ -99,6 +99,27 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 {
     <K_AS: "AS">
 |   <K_BY:"BY">
+|   <K_PARTITIONED:"PARTITIONED">
+|   <K_LOCATION:"LOCATION">
+|   <K_STORED:"STORED">
+|   <K_FORMAT:"FORMAT">
+|   <K_DELIMITED:"DELIMITED">
+|   <K_FIELDS:"FIELDS">
+|   <K_TERMINATED:"TERMINATED">
+|   <K_ESCAPED:"ESCAPED">
+|   <K_COLLECTION:"COLLECTION">
+|   <K_ITEMS:"ITEMS">
+|   <K_MAP:"MAP">
+|   <K_KEYS:"KEYS">
+|   <K_LINES:"LINES">
+|   <K_DEFINED:"DEFINED">
+|   <K_SEQUENCEFILE: "SEQUENCEFILE">
+|   <K_TEXTFILE:"TEXTFILE">    
+|   <K_RCFILE:"RCFILE">      
+|   <K_ORC:"ORC">        
+|   <K_PARQUET:"PARQUET">     
+|   <K_AVRO:"AVRO">        
+|   <K_INPUTFORMAT:"INPUTFORMAT"> 
 |   <K_DO:"DO">
 |   <K_IS:"IS">
 |   <K_IN:"IN">
@@ -1985,6 +2006,7 @@ CreateTable CreateTable():
 	List columnDefinitions = new ArrayList();
 	List columnSpecs = null;
 	List tableOptions = new ArrayList();
+	List partitionedBys = new ArrayList();
 	Token columnName;
 	Token tk = null;
 	Token tk2 = null;
@@ -1998,6 +2020,10 @@ CreateTable CreateTable():
 	ForeignKeyIndex fkIndex = null;
 	String parameter = null;
 	Table fkTable = null;
+	PartitionedBy partitionedBy = null;
+	String location = null;
+	FileFormat fileFormat = null;
+	RowFormat rowFormat = null;
 }
 {
 	<K_CREATE>
@@ -2115,8 +2141,12 @@ CreateTable CreateTable():
 		)*
 
 		")"
-		( 	parameter=CreateParameter() { tableOptions.add(parameter); } )*
-
+		( 	parameter=CreateParameter() { tableOptions.add(parameter); } 
+			| partitionedBy=PartitionedBy() {partitionedBys.add(partitionedBy);}		
+		)*
+		(rowFormat=RowFormat(){createTable.setRowFormat(rowFormat);})?
+		(fileFormat=FileFormat(){createTable.setFileFormat(fileFormat);})?
+		(<K_LOCATION> tk3=<S_CHAR_LITERAL>{createTable.setLocation(tk3.image);})?
 	]
 
 	{
@@ -2127,8 +2157,114 @@ CreateTable CreateTable():
 			createTable.setTableOptionsStrings(tableOptions);
 		if (columnDefinitions.size() > 0)
 			createTable.setColumnDefinitions(columnDefinitions);
+		if(partitionedBys.size()>0)
+			createTable.setPartitionedBys(partitionedBys);
 		return createTable;
 	}
+}
+
+RowFormat RowFormat():
+{
+	RowFormat rformat = new RowFormat();
+	Token rfTok = null;
+}
+{
+	(
+		<K_ROW> <K_FORMAT> <K_DELIMITED>
+			(<K_FIELDS> <K_TERMINATED> <K_BY> rfTok=<S_CHAR_LITERAL>{rformat.setFieldTerminator(rfTok.image.charAt(0));} (<K_ESCAPED> <K_BY> rfTok=<S_CHAR_LITERAL>{rformat.setEscapedBy(rfTok.image.charAt(0));})?)?			 
+			(<K_COLLECTION> <K_ITEMS> <K_TERMINATED> <K_BY> rfTok=<S_CHAR_LITERAL>{rformat.setCollectionItemTerminator(rfTok.image.charAt(0));})?
+			(<K_MAP> <K_KEYS> <K_TERMINATED> <K_BY> rfTok=<S_CHAR_LITERAL>{rformat.setMapKeysTerminator(rfTok.image.charAt(0));})?
+			(<K_LINES> <K_TERMINATED> <K_BY> rfTok=<S_CHAR_LITERAL>{rformat.setLineTerminator(rfTok.image.charAt(0));})?
+			(<K_NULL> <K_DEFINED> <K_AS> rfTok=<S_CHAR_LITERAL>{rformat.setNullDefinedAs(rfTok.image.charAt(0));})?
+	)
+	{
+		return rformat;
+	}
+}
+
+FileFormat FileFormat():
+{
+	FileFormat ff = new FileFormat();
+	Token rfTok = null;
+}
+{
+	(<K_STORED> <K_AS> (rfTok =<K_SEQUENCEFILE>
+	|   rfTok =<K_TEXTFILE> |   rfTok =<K_RCFILE>  |   rfTok =<K_ORC>        
+	|   rfTok =<K_PARQUET>     
+	|   rfTok =<K_AVRO>        
+	|   rfTok =<K_INPUTFORMAT> ){ff.setFormatName(rfTok.image);} (rfTok=<S_CHAR_LITERAL>{ff.setInputFormatClass(rfTok.image);})?
+	)
+	{
+		return ff;
+	}
+}
+
+
+
+PartitionedBy PartitionedBy():
+{
+	PartitionedBy partitionedBy = new PartitionedBy();
+	List columnDefinitions = new ArrayList();
+	List columnSpecs = null;
+	Token columnName;	
+	Token parameter;
+	ColDataType colDataType = null;	
+	ColumnDefinition coldef = null;
+}
+{
+	<K_PARTITIONED> <K_BY> 
+	"("
+		(columnName=<S_IDENTIFIER>
+		|
+		columnName=<S_QUOTED_IDENTIFIER>)
+
+		colDataType = ColDataType()
+		{
+			columnSpecs = new ArrayList();
+		}
+
+		( parameter=<S_CHAR_LITERAL> { columnSpecs.add(parameter.image); } )?
+
+		{
+			coldef = new ColumnDefinition();
+			coldef.setColumnName(columnName.image);
+			coldef.setColDataType(colDataType);
+			if (columnSpecs.size() > 0)
+				coldef.setColumnSpecStrings(columnSpecs);
+			columnDefinitions.add(coldef);
+		}
+		
+		","
+			(
+				(columnName=<S_IDENTIFIER>
+				|
+				columnName=<S_QUOTED_IDENTIFIER>)
+		
+				colDataType = ColDataType()
+				{
+					columnSpecs = new ArrayList();
+				}
+		
+				( parameter=<S_CHAR_LITERAL> { columnSpecs.add(parameter.image); } )?
+		
+				{
+					coldef = new ColumnDefinition();
+					coldef.setColumnName(columnName.image);
+					coldef.setColDataType(colDataType);
+					if (columnSpecs.size() > 0)
+						coldef.setColumnSpecStrings(columnSpecs);
+					columnDefinitions.add(coldef);
+				}
+			
+			)*
+			
+	   ")"	
+	   {
+	   		
+	   		partitionedBy.setPartitionDefinitions(columnDefinitions);
+	   		return partitionedBy;
+	   }
+
 }
 
 ColDataType ColDataType():
