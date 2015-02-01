@@ -55,6 +55,11 @@ public class EntityDefinition {
 		return partitionIndexMap.getKey(idx);
 	}
 	
+	public boolean isPartitionColumn(String name)
+	{
+		return partitionIndexMap.containsKey(name);
+	}
+	
 	public int getPartitionFieldIndex(String name)
 	{
 		if(partitionIndexMap.containsKey(name)){
