@@ -1,5 +1,9 @@
 package com.asksunny.sql.engine.util;
 
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorConverter.DateConverter;
+
+import com.asksunny.sql.date.DateFormatConverter;
+
 public final class StringLiteralUtil {
 
 	public static final String RUBY_TEXT_QUOTE = "\"\"\"";
@@ -11,7 +15,7 @@ public final class StringLiteralUtil {
 	private StringLiteralUtil() {
 	}
 
-	public String unquote(String value) {
+	public static  String unquote(String value) {
 		if (value == null) {
 			return null;
 		} else if (value.startsWith(STRING_DOUBLE_QUOTE)
@@ -28,7 +32,7 @@ public final class StringLiteralUtil {
 		}
 	}
 
-	public String unquote(String value, String quote) {
+	public static  String unquote(String value, String quote) {
 		if (value == null) {
 			return null;
 		} else if (value.startsWith(quote) && value.endsWith(quote)) {
@@ -39,7 +43,7 @@ public final class StringLiteralUtil {
 		}
 	}
 	
-	public String unquote(String value, String startQuote, String endQuote) {
+	public static  String unquote(String value, String startQuote, String endQuote) {
 		if (value == null) {
 			return null;
 		} else if (value.startsWith(startQuote) && value.endsWith(endQuote)) {
@@ -49,5 +53,12 @@ public final class StringLiteralUtil {
 			return value;
 		}
 	}
+	
+	
+	public static String dbDateFormatToJavaFormat(String dbDateFormat)
+	{
+		return DateFormatConverter.toJavaDateFormat(dbDateFormat);
+	}
+	
 
 }
