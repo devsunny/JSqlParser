@@ -43,6 +43,8 @@ import net.sf.jsqlparser.statement.update.*;
 import net.sf.jsqlparser.statement.set.Set;
 import net.sf.jsqlparser.statement.show.Show;
 import java.util.*;
+import java.util.regex.Pattern;
+import com.asksunny.sql.engine.util.CaseInsensitiveMap;
 
 /** Token Manager. */
 @SuppressWarnings("unused")public class CCJSqlParserTokenManager implements CCJSqlParserConstants {
